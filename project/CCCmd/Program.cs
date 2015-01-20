@@ -304,6 +304,8 @@ namespace ThoughtWorks.CruiseControl.CCCmd
             {
                 if (!isQuiet) WriteLine("Retrieving snapshot from " + client.TargetServer, ConsoleColor.Gray);
                 CruiseServerSnapshot snapShot = client.GetCruiseServerSnapshot();
+                foreach (ProjectStatus project in snapShot.ProjectStatuses)
+                    project.Parameters = client.ListBuildParameters(project.Name);
                 if (xml)
                 {
                     XmlSerializer serializer = new XmlSerializer(typeof(CruiseServerSnapshot));
@@ -336,6 +338,7 @@ namespace ThoughtWorks.CruiseControl.CCCmd
                 {
                     if (string.Equals(project.Name, projectName, StringComparison.CurrentCultureIgnoreCase))
                     {
+                        project.Parameters = client.ListBuildParameters(projectName);
                         if (xml)
                         {
                             XmlSerializer serializer = new XmlSerializer(typeof(ProjectStatus));
